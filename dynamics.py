@@ -181,3 +181,8 @@ def mesh(N):
     for i in range(N):
         A[i, i] = 0
     return A
+
+        
+
+
+

@@ -93,8 +93,8 @@ A=dy.influencer_network(3,4)
 #x0=(np.random.uniform(-1.0,1.0,size=N))
 x0=np.array([1,1,1,0,0,0,0,0,0,0,0,0,0,0,0])
 
-#x,u=map_u(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,gm=-1.3,b=0.0)
-x,d=map_d(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,u=0.26,al=1.2,gm=-1.3,b=0.0)
+x,u=map_u(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,gm=1.3,b=0.0)
+#x,d=map_d(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,u=0.26,al=1.2,gm=-1.3,b=0.0)
 #x,al=map_al(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,gm=-1.3,b=0.0)
 #x,gm=map_gm(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,al=1.2,b=0.0)
 #x=map_b(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,al=1.3,gm=-1.3)
@@ -136,15 +136,15 @@ def graph(A,x,v):
 
         '''
         nx.draw(G,pos=plot_positions,node_size=500,node_color=x[:,i],cmap='coolwarm',vmin=vmin,vmax=vmax)
-        string = "d : "+str(v[i])+" gamma = -1.3"
+        string = "u : "+str(v[i])+" gamma = 1.3"
         plt.title(string)
     fig=plt.gcf()
     plt.colorbar(sm)
     anim = an.FuncAnimation(fig, animate, frames=200, blit=False)
     writervideo = an.FFMpegWriter(fps=10) 
-    anim.save('Map_d_Influencer_gamma_neg.mp4', writer=writervideo)
+    anim.save('Map_u_Influencer_gamma_pos.mp4', writer=writervideo)
 
-graph(A,x,d)
+graph(A,x,u)
 
 
 
