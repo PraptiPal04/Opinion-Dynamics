@@ -132,4 +132,52 @@ def star(N):
         A[N-1,i]=1
     return A
 
+#INFLUENCER
+    
+def add_followers(A, i, n):
+    #adds n followers (star topology) of agent i to adj. matrix A and returns new adj. matrix
+    old_n = A.shape[1]
+    A = enlarge_matrix_N(A, n)
+    for j in range(n):
+        make_connection(A, i, old_n+j)
+    return A
 
+def influencer_network(N, m):
+    #create network of n connected agents with m followers,
+    #where m is of type int (adding m followers to each agent) or list of len(N) of ints (adding m[i] followers to agent i)
+    A = mesh(N)
+    for i in range(N):
+        if isinstance(m, int):
+            A = add_followers(A, i, m)
+        else:
+            A = add_followers(A, i, m[i])            
+    return A
+
+def enlarge_matrix(A):
+    #takes matrix of any shape as input and returns adj. matrix with one row and one columns of zeros added
+    B = np.ones([0,A.shape[1]+1])
+    for row in A:
+        B = np.append(B, [np.append(row, 0)], 0)
+    B = np.append(B, [np.zeros(A.shape[1]+1)], 0)
+    return B
+
+def enlarge_matrix_N(A, n):
+    #enlarge given matrix by n rows and columns of zeros
+    for i in range(n):
+        A = enlarge_matrix(A)
+    return A
+
+def make_connection(A, id1, id2):
+    A[id1][id2] = 1
+    A[id2][id1] = 1
+
+def delete_connection(A, id1, id2):
+    A[id1][id2] = 0
+    A[id2][id1] = 0
+
+
+def mesh(N):
+    A = np.ones((N, N))
+    for i in range(N):
+        A[i, i] = 0
+    return A
