@@ -5,6 +5,8 @@ Created on Wed Jan 13 12:41:20 2021
 @author: Prapti
 """
 import numpy as np
+import dynamics as dy
+import matplotlib.pyplot as plt
 
 #Butcher Tableau
 alpha = np.array([0.0, 1.0/4.0, 3.0/8.0, 12.0/13.0, 1.0, 1.0/2.0])
@@ -20,7 +22,8 @@ cerr=c-c_star
 
 tol = 0.0000001     #desired accuracy/tolerance
 safe = 0.84     #safety factor
-N_t = 1000  #no. of steps taken in the adaptive step size
+N_t = 100  #no. of steps taken in the adaptive step size
+h_max = 2
 
 def rkf(f,x,h,N,*args,**kwargs):
     '''
@@ -65,7 +68,7 @@ def rkf(f,x,h,N,*args,**kwargs):
     H[0] = h
     
     i = 0
-    while i < N_t-1 : 
+    while i+1<N_t : 
         k1 = f(X[:,i],*args,**kwargs)
         k2 = f(X[:,i]+h*beta[1,0]*k1, *args,**kwargs)
         k3 = f(X[:,i]+h*(beta[2,0]*k1 + beta[2,1]*k2),*args,**kwargs)
@@ -86,3 +89,11 @@ def rkf(f,x,h,N,*args,**kwargs):
             h=safe*h*(tol/max_error)**0.25
     
     return X,T,H,EPS
+
+# A = dy.path(5)
+# x0 = (np.random.uniform(-1.0,1.0,size=5))
+# x,t,h,e = rkf(dy.rhs,x0,0.05,5,A=A,d=0.5,u=0.26,al=-0.8,gm=3,b=0.0)
+# for i in range(5):
+#     plt.plot(t,x[i,:],'.:')
+# #plt.plot(t,h,'r.:')
+# plt.show()

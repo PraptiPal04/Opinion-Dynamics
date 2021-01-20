@@ -10,9 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from RKF import rkf
 import dynamics as dy
-import networkx as nx
-import matplotlib as mpl
-import matplotlib.animation as an
+import graph_plot as gr
 
 
 #Mapping attention parameter u
@@ -53,8 +51,8 @@ def map_al(func,*args,**kwargs):
         x_bar,t,h,e = func(al=al[i],*args,**kwargs)
         X[:,i] = x_bar[:,-1]
     
-    # for i in range(N):
-    #     plt.plot(al,X[i,:])
+    for i in range(N):
+        plt.plot(al,X[i,:])
     return X,al
 
 
@@ -76,26 +74,26 @@ def map_gm(func,*args,**kwargs):
 
 # #Mapping external bias b
         
-# def map_b(func,*args,**kwargs):
+def map_b(func,*args,**kwargs):
     
-#     b=np.arange(-0.3,0.3,0.05)
-#     X = np.zeros((N,len(b)))
-#     for i in range(len(b)):
-#         x_bar,t,h,e = func(b=b[i],*args,**kwargs)
-#         X[:,i] = x_bar[:,-1]
+    b=np.arange(-0.3,0.3,0.05)
+    X = np.zeros((N,len(b)))
+    for i in range(len(b)):
+        x_bar,t,h,e = func(b=b[i],*args,**kwargs)
+        X[:,i] = x_bar[:,-1]
     
-#     for i in range(N):
-#         plt.plot(b,X[i,:])
+    for i in range(N):
+        plt.plot(b,X[i,:])
 
 
-N=15
-A=dy.influencer_network(3,4)
-#x0=(np.random.uniform(-1.0,1.0,size=N))
-x0=np.array([1,1,1,0,0,0,0,0,0,0,0,0,0,0,0])
+N=5
+A=dy.path(N)
+x0=(np.random.uniform(-1.0,1.0,size=N))
+#x0=np.array([1,1,1,0,0,0,0,0,0,0,0,0,0,0,0])
 
-x,u=map_u(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,gm=1.3,b=0.0)
+#x,u=map_u(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,gm=1.3,b=0.0)
 #x,d=map_d(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,u=0.26,al=1.2,gm=-1.3,b=0.0)
-#x,al=map_al(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,gm=-1.3,b=0.0)
+x,al=map_al(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,gm=-1.3,b=0.0)
 #x,gm=map_gm(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,al=1.2,b=0.0)
 #x=map_b(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,al=1.3,gm=-1.3)
 
@@ -105,46 +103,10 @@ x,u=map_u(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,gm=1.3,b=0.0)
 # plt.ylabel("Opinions x")
 # plt.xlabel("Parameter gamma")
 # #plt.savefig("u_map_Path_Agreement.jpg")
-# plt.show()
+plt.show()
 
-def graph(A,x,v):
-    rows,cols=np.where(A==1.)
-    edges=zip(rows.tolist(),cols.tolist())
-    G=nx.Graph()
-    G.add_edges_from(edges)
-    plot_positions=nx.drawing.spring_layout(G)
 
-    vmin=-1
-    vmax=1
-    norm=mpl.colors.Normalize(vmin=vmin,vmax=vmax)
-    cmap=plt.get_cmap('coolwarm')
-    sm=plt.cm.ScalarMappable(cmap=cmap,norm=norm)
-    sm.set_array([])
-    
-    def animate(i):
-        '''
-        Function to iterate over in order to animate the graphs
-
-        Parameters
-        ----------
-        i : int
-        interative variable for the FuncAnimation() function to animate the graph
-
-        Returns
-        -------
-        None.
-
-        '''
-        nx.draw(G,pos=plot_positions,node_size=500,node_color=x[:,i],cmap='coolwarm',vmin=vmin,vmax=vmax)
-        string = "u : "+str(v[i])+" gamma = 1.3"
-        plt.title(string)
-    fig=plt.gcf()
-    plt.colorbar(sm)
-    anim = an.FuncAnimation(fig, animate, frames=200, blit=False)
-    writervideo = an.FFMpegWriter(fps=10) 
-    anim.save('Map_u_Influencer_gamma_pos.mp4', writer=writervideo)
-
-graph(A,x,u)
+#gr.graph(A,x)
 
 
 
