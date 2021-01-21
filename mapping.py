@@ -17,6 +17,23 @@ import graph_plot as gr
 
 
 def cascade(A,x):
+    '''
+    Checks if a particular opinion network is in Opinion Casade.
+
+    Parameters
+    ----------
+    A : numpy array
+        adjacency matrix of the graph
+    x : numpy array
+        opinions of each node of the network
+
+    Returns
+    -------
+    int
+        Either 1 or 0. State 1 corresponds to opinion cascade. State 0 
+        corresponds to no cascade.
+
+    '''
     
     row,col = np.where(A==1.)
     flag = 1
@@ -61,20 +78,51 @@ def map_u_gamma(func,*args,**kwargs):
             X[:,i,j] = x_bar[:,-1]
     return X,u,gm
 
-
-def plot_map(f,X,a,b,*args,**kwargs):
+def map_u_d(func,*args,**kwargs):
     
-    cas=np.zeros((len(a)*len(b)))
+    u = np.arange(0,0.5,0.1)
+    d=np.arange(0.25,1.5,0.1)
+    X = np.zeros((N,len(u),len(d)))
+    for i in range(len(u)):
+        for j in range(len(d)):
+            x_bar,t,h,e = func(d=d[j],u=u[i],*args,**kwargs)
+            X[:,i,j] = x_bar[:,-1]
+    return X,u,d
+
+def plot_map(f,X,a,b,A):
+    '''
+    Plots the paramter map in a two dimensional parameter space for any two 
+    paramters a and b
+
+    Parameters
+    ----------
+    f : function
+        function to chack if there is opinion cascade
+    X : numpy array 3D
+        consists of the solutions of the system for two varying parameters
+    a : numpy array
+        different values of paramter a
+    b : numpy array
+        different values of paramter b
+    
+    Returns
+    -------
+    None.
+
+    '''
+    
+    cas=np.zeros((len(a),len(b)))
     for i in range(len(a)):
         for j in range(len(b)):
-            cas[(i*len(b))+j] = f(A,X[:,i,j])
-    bb,aa = np.meshgrid(a,b)
+            cas[i,j] = f(A,X[:,i,j])
+    bb,aa = np.meshgrid(b,a)
     bb=bb.flatten()
     aa=aa.flatten()
+    cas = cas.flatten()
     # print(aa)
     # print(bb)
     # print(cas)
-    plt.scatter(aa,bb,s=1,c=cas,cmap=plt.get_cmap('coolwarm'),vmin=0,vmax=1)
+    plt.scatter(bb,aa,s=1,c=cas,cmap=plt.get_cmap('coolwarm'),vmin=0,vmax=1)
     plt.title("Map u gamma Path")
     plt.xlabel("gamma")
     plt.ylabel("u")
@@ -96,8 +144,9 @@ x0=(np.random.uniform(-1.0,1.0,size=N))
 #X,al,gm = map_alpha_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,b=0.0)
 #X,d,gm = map_d_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,u=0.26,al=1.2,b=0.0)
 X,u,gm = map_u_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,b=0.0)
+#X,u,d = map_u_d(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,gm=-1.3,al=1.2,b=0.0)
 
-plot_map(cascade,X,u,gm,A=A)
+plot_map(cascade,X,u,gm,A)
 
 
 

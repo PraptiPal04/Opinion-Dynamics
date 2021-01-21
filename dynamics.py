@@ -298,19 +298,14 @@ def rand_tree(depth, low, high):
 # Symmetric Tree Topology
 def add_sym_branches(A, n):
     """
-    Adds a (random) number of branches to an existing tree. New branches will 
+    Adds a n number of branches toeach node in an existing tree. New branches will 
     only be added to a node, if that node is only connected with one other 
-    node (so if it is on the outside of the tree). The random number can be 
-    bounded and therefore also fixed on a not random int by setting low=high
+    node (so if it is on the outside of the tree). 
     Parameters
     ----------
     A :   Adjacency matrix of network that the branches shall be added to
-    low : lowest possible integer for the random choice of added branches to 
-          each node
-    high :highest possible integer for the random choice of added branches to 
-          each node 
-          
-          NOTE: if low = high = n, then n branches will be added to each node
+    n : integer, number of nodes added to each node
+    
     Returns
     -------
     A : np.array (matrix) - changed adjacency matrix
@@ -326,16 +321,16 @@ def add_sym_branches(A, n):
 
 def sym_tree(lvl,n):
     """
-    Creates a tree topology with the  being the number of nodes 
-    counting from the central node and going the longest path to end of tree
-    (length of all paths is identical if low >0)
+    Creates a tree topology with the lvl being the number of nodes 
+    counting after the central node and going the longest path to end of tree
+    At each level there are n nodes connected to each node
+    
     Parameters
     ----------
-    depth : integer, depth as defined above 
-    low :   integer "low" that is passed to add_rand_branches function (see
-            docstring there)
-    high :  integer "high" that is passed to add_rand_branches function (see
-            docstring there)
+    lvl : integer, level as defined above 
+    n :   integer, number of nodes connected to each node at any particular 
+    level
+    
     Returns
     -------
     A : np.array (matrix) - adjacency matrix

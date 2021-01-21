@@ -7,6 +7,8 @@ Created on Wed Jan 13 12:41:20 2021
 import numpy as np
 import dynamics as dy
 import matplotlib.pyplot as plt
+import graph_plot as gr
+
 
 #Butcher Tableau
 alpha = np.array([0.0, 1.0/4.0, 3.0/8.0, 12.0/13.0, 1.0, 1.0/2.0])
@@ -23,7 +25,7 @@ cerr=c-c_star
 tol = 0.0000001     #desired accuracy/tolerance
 safe = 0.84     #safety factor
 N_t = 100  #no. of steps taken in the adaptive step size
-h_max = 2
+h_max = 4
 
 def rkf(f,x,h,N,*args,**kwargs):
     '''
@@ -60,15 +62,14 @@ def rkf(f,x,h,N,*args,**kwargs):
         error epsilon at each step(between the calculated values from RK-4 and RK-5 method)
 
     '''
-    T = np.zeros(N_t)
-    X = np.zeros((N,N_t))
-    H = np.zeros(N_t)
-    EPS = np.zeros(N_t)
+    T = np.zeros((1))
+    X = np.zeros((N,1))
+    H = np.array([h])
+    EPS = np.zeros((1))
     X[:,0] = x
-    H[0] = h
     
     i = 0
-    while i+1<N_t : 
+    while h<h_max : 
         k1 = f(X[:,i],*args,**kwargs)
         k2 = f(X[:,i]+h*beta[1,0]*k1, *args,**kwargs)
         k3 = f(X[:,i]+h*(beta[2,0]*k1 + beta[2,1]*k2),*args,**kwargs)
@@ -79,11 +80,12 @@ def rkf(f,x,h,N,*args,**kwargs):
         max_error = np.absolute(errorfield).max()
         
         if (max_error <= tol):
-            X[:,i+1] = X[:,i] + h*(c_star[0]*k1 + c_star[1]*k2 + c_star[2]*k3 + c_star[3]*k4 + c_star[4]*k5 + c_star[5]*k6)
+            temp = X[:,i] + h*(c_star[0]*k1 + c_star[1]*k2 + c_star[2]*k3 + c_star[3]*k4 + c_star[4]*k5 + c_star[5]*k6)
+            X = np.insert(X,i+1,temp,axis=1)
             h = safe * h* (tol/max_error)**0.2
-            H[i+1]=h
-            T[i+1]=T[i]+h
-            EPS[i+1]=max_error
+            H=np.append(H,h)
+            T=np.append(T,T[i]+h)
+            EPS=np.append(EPS,max_error)
             i+=1
         else:
             h=safe*h*(tol/max_error)**0.25
@@ -91,9 +93,12 @@ def rkf(f,x,h,N,*args,**kwargs):
     return X,T,H,EPS
 
 # A = dy.path(5)
-# x0 = (np.random.uniform(-1.0,1.0,size=5))
-# x,t,h,e = rkf(dy.rhs,x0,0.05,5,A=A,d=0.5,u=0.26,al=-0.8,gm=3,b=0.0)
-# for i in range(5):
-#     plt.plot(t,x[i,:],'.:')
-# #plt.plot(t,h,'r.:')
+# #x0 = (np.random.uniform(-1.0,1.0,size=5))
+# x0=np.array([0,0,1,0,0])
+# x,t,h,e = rkf(dy.rhs,x0,0.05,5,A=A,d=0.5,u=0.26,al=0,gm=-3,b=0.0)
+# # # for i in range(5):
+# # #     plt.plot(t,x[i,:],'.:')
+# # plt.plot(t,h,'r.:')
+# gr.graph_plot(A,x[:,-1])
 # plt.show()
+

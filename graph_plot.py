@@ -10,7 +10,7 @@ import matplotlib.animation as an
 import numpy as np
 import matplotlib.pyplot as plt
 
-def graph(A,x):
+def graph_animate(A,x):
     '''
     Creates graph from the adjacency matrix and plots the network.
     An animation video is also created and saved of the evolution
@@ -63,3 +63,45 @@ def graph(A,x):
     anim = an.FuncAnimation(fig, animate, frames=200, blit=False)
     writervideo = an.FFMpegWriter(fps=10) 
     anim.save('Map_u_Influencer_gamma_pos.mp4', writer=writervideo)
+
+def graph_plot(A,x):
+    
+    '''
+    Creates graph from the adjacency matrix and plots the network.
+    
+
+    Parameters
+    ----------
+    A : numpy array
+        adjacency matrix of the system
+    x : numpy array
+        solution of the system for every time step
+   
+
+    Returns
+    -------
+    None.
+
+    '''
+    rows,cols=np.where(A==1.)
+    edges=zip(rows.tolist(),cols.tolist())
+    G=nx.Graph()
+    G.add_edges_from(edges)
+    plot_positions=nx.drawing.spring_layout(G)
+
+    vmin=-1
+    vmax=1
+    norm=mpl.colors.Normalize(vmin=vmin,vmax=vmax)
+    cmap=plt.get_cmap('coolwarm')
+    sm=plt.cm.ScalarMappable(cmap=cmap,norm=norm)
+    sm.set_array([])
+    nx.draw(G,pos=plot_positions,node_size=500,node_color=x,cmap='coolwarm',vmin=vmin,vmax=vmax)
+    plt.colorbar(sm)
+    
+    
+    
+    
+    
+    
+    
+    
