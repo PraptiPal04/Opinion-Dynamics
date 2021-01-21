@@ -123,30 +123,30 @@ def plot_map(f,X,a,b,A):
     # print(bb)
     # print(cas)
     plt.scatter(bb,aa,s=1,c=cas,cmap=plt.get_cmap('coolwarm'),vmin=0,vmax=1)
-    plt.title("Map u gamma Path")
+    plt.title("Map alpha gamma Symmetric Tree")
     plt.xlabel("gamma")
-    plt.ylabel("u")
+    plt.ylabel("alpha")
     plt.colorbar()
     plt.show()
 
-# N = 40
-# A=dy.sym_tree(3,3)
-# #x0=(np.random.uniform(-1.0,1.0,size=N))
-# x0=np.zeros(N-1)
-# x0 = np.insert(x0,0,1.)
+N = 40
+A=dy.sym_tree(3,3)
+#x0=(np.random.uniform(-1.0,1.0,size=N))
+x0=np.zeros(N-1)
+x0 = np.insert(x0,0,1.)
     
-N=5
-A=dy.path(N)
-x0=(np.random.uniform(-1.0,1.0,size=N))
-#x0 = np.array([0,0,1,0,0])
+# N=5
+# A=dy.path(N)
+# x0=(np.random.uniform(-1.0,1.0,size=N))
+# #x0 = np.array([0,0,1,0,0])
     
 
-#X,al,gm = map_alpha_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,b=0.0)
+X,al,gm = map_alpha_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,u=0.26,b=0.0)
 #X,d,gm = map_d_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,u=0.26,al=1.2,b=0.0)
-X,u,gm = map_u_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,b=0.0)
+#X,u,gm = map_u_gamma(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,d=0.5,al=1.2,b=0.0)
 #X,u,d = map_u_d(rkf,f=dy.rhs,x=x0,h=0.05,N=N,A=A,gm=-1.3,al=1.2,b=0.0)
 
-plot_map(cascade,X,u,gm,A)
+plot_map(cascade,X,al,gm,A)
 
 
 
