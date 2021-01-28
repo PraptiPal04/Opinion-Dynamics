@@ -55,7 +55,7 @@ def map_alpha_gamma(func,f1,*args,**kwargs):
         for j in range(len(gm)):
             x_bar,t,h,e = func(gm=gm[j],al=al[i],*args,**kwargs)
             X[:,i,j] = x_bar[:,-1]
-            #print("y",i,j)
+            print("y",i,j)
     print("Enter")
     cas=np.zeros((len(al),len(gm)))
     for i in range(len(al)):
@@ -69,11 +69,11 @@ def map_alpha_gamma(func,f1,*args,**kwargs):
     # print(bb)
     # print(cas)
     plt.scatter(bb,aa,s=1,c=cas,cmap=plt.get_cmap('coolwarm'),vmin=-1,vmax=1)
-    plt.title("Map alpha gamma Path")
+    plt.title("Map alpha gamma Sym_Tree")
     plt.xlabel("gamma")
     plt.ylabel("alpha")
     plt.colorbar()
-    plt.savefig("Map_alpha_gamma_Path_random_5.jpg")
+    plt.savefig("Map_alpha_gamma_Sym_Tree_random_1.jpg")
     plt.clf()
 
 def map_d_gamma(func,f1,*args,**kwargs):
@@ -87,7 +87,7 @@ def map_d_gamma(func,f1,*args,**kwargs):
         for j in range(len(gm)):
             x_bar,t,h,e = func(gm=gm[j],d=d[i],*args,**kwargs)
             X[:,i,j] = x_bar[:,-1]
-            #print("y",i,j)
+            print("y",i,j)
     print("Enter")
     cas=np.zeros((len(d),len(gm)))
     for i in range(len(d)):
@@ -101,11 +101,11 @@ def map_d_gamma(func,f1,*args,**kwargs):
     # print(bb)
     # print(cas)
     plt.scatter(bb,aa,s=1,c=cas,cmap=plt.get_cmap('coolwarm'),vmin=-1,vmax=1)
-    plt.title("Map d gamma Path")
+    plt.title("Map d gamma Sym_Tree")
     plt.xlabel("gamma")
     plt.ylabel("d")
     plt.colorbar()
-    plt.savefig("Map_d_gamma_Path_random_5.jpg")
+    plt.savefig("Map_d_gamma_Sym_Tree_random_1.jpg")
     plt.clf()
 
 def map_u_gamma(func,f1,*args,**kwargs):
@@ -119,7 +119,7 @@ def map_u_gamma(func,f1,*args,**kwargs):
         for j in range(len(gm)):
             x_bar,t,h,e = func(gm=gm[j],u=u[i],*args,**kwargs)
             X[:,i,j] = x_bar[:,-1]
-            #print("y",i,j)
+            print("y",i,j)
     print("Enter")
     cas=np.zeros((len(u),len(gm)))
     for i in range(len(u)):
@@ -133,11 +133,11 @@ def map_u_gamma(func,f1,*args,**kwargs):
     # print(bb)
     # print(cas)
     plt.scatter(bb,aa,s=1,c=cas,cmap=plt.get_cmap('coolwarm'),vmin=-1,vmax=1)
-    plt.title("Map u gamma Path")
+    plt.title("Map u gamma Sym_Tree")
     plt.xlabel("gamma")
     plt.ylabel("u")
     plt.colorbar()
-    plt.savefig("Map_u_gamma_Path_random_5.jpg")
+    plt.savefig("Map_u_gamma_Sym_Tree_random_1.jpg")
     plt.clf()
     
 def map_u_d(func,f1,*args,**kwargs):
@@ -151,7 +151,7 @@ def map_u_d(func,f1,*args,**kwargs):
         for j in range(len(d)):
             x_bar,t,h,e = func(d=d[j],u=u[i],*args,**kwargs)
             X[:,i,j] = x_bar[:,-1]
-            #print("y",i,j)
+            print("y",i,j)
     print("Enter")
     cas=np.zeros((len(u),len(d)))
     for i in range(len(u)):
@@ -165,11 +165,11 @@ def map_u_d(func,f1,*args,**kwargs):
     # print(bb)
     # print(cas)
     plt.scatter(bb,aa,s=1,c=cas,cmap=plt.get_cmap('coolwarm'),vmin=-1,vmax=1)
-    plt.title("Map u d Path")
+    plt.title("Map u d SYm_Tree")
     plt.xlabel("d")
     plt.ylabel("u")
     plt.colorbar()
-    plt.savefig("Map_u_d_Path_random_5.jpg")
+    plt.savefig("Map_u_d_Sym_Tree_random_1.jpg")
     plt.clf()
 
 def plot_map_now(f,X,a,b,A):
@@ -214,8 +214,8 @@ def plot_map_now(f,X,a,b,A):
 
 # PATH
     
-N=5
-A=dy.path(N)
+N=13
+A=dy.sym_tree(2,3)
 x0=(np.random.uniform(-1.0,1.0,size=N))
 #x0 = np.array([0,0,1,0,0])
     

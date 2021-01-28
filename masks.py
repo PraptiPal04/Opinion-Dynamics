@@ -33,7 +33,7 @@ def undyn_u(u0,t):
     return u0
         
 N=10
-# A=dy.small_world_network(N,2)
+#A=dy.small_world_network(N,2)
 # #x0=(np.random.uniform(-1.0,1.0,size=N))
 # x0=(np.random.uniform(-1.0,1.0,size=N))
 # #x0=np.append(x0,1)
@@ -42,7 +42,7 @@ A=dy.small_world_network_with_rand(N,0.25,2)
 x0=(np.random.uniform(-1.0,1.0,size=N))
 
 # b=np.array([0.2,0.,0.,0.,0.,0.,0.,0.,0.,0.])
-# x,t,h,err,d,u = rkf_var(dy.rhs,x0,0.05,N,1,0.15,dyn_d,undyn_u,A=A,al=1,gm=1.3,b=b) 
+x,t,h,err,d,u = rkf_var(dy.rhs,x0,0.05,N,1,0.15,dyn_d,undyn_u,A=A,al=1,gm=1.3,b=0) 
 # print(A)
 # print(x0)
 
@@ -52,6 +52,9 @@ x0=(np.random.uniform(-1.0,1.0,size=N))
 #plt.plot(t,u)
 
 # gr.graph_animate(A,x)
-
+# plt.plot(t,d)
+# plt.xlabel("t")
+# plt.ylabel("d")
+# plt.title("d vs t")
 # plt.show()
 
