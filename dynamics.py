@@ -5,6 +5,7 @@ Created on Wed Jan 13 12:43:50 2021
 @author: Prapti
 """
 import numpy as np
+import random
 
 def rhs(x,A,d,u,al,gm,b):
     '''
@@ -35,6 +36,8 @@ def rhs(x,A,d,u,al,gm,b):
     '''
     x_dot=-d*x+u*np.tanh(al*x + gm * np.matmul(A,x))+b
     return x_dot
+
+
 
 
 #TOPOLOGIES
@@ -341,3 +344,75 @@ def sym_tree(lvl,n):
     return A
 
 
+def decision(probability):
+  """
+  returns Returns TRUE with a probability of input, FALSE otherwise
+
+  Parameters
+  ----------
+  probability : float
+  Should be in interval [0,1] and represents probability for the
+  function to return TRUE.
+
+  Returns
+  -------
+  boolean
+  True with probability probability, False otherwise.
+
+  """
+  return random.random() < probability
+
+def small_world_network(N, k=2):
+  """
+  Creates small world network as in https://www.nature.com/articles/30918
+
+  Parameters
+  ----------
+  N : integer
+  Number of nodes.
+  k : integer
+  Number of neighbours to which each node is connected on each side.
+  The default is 2.
+
+  Returns
+  -------
+  A : np.array (matrix)
+  Adjacency matrix for such a network.
+
+  """
+  A = circle(N)
+  for i in range(N):
+      for j in range(k-1):
+          A = make_connection(A, i, i-(j+2))
+  return A
+
+def small_world_network_with_rand(N, p, k=2):
+  """
+  Creates small world network as in https://www.nature.com/articles/30918
+
+  Parameters
+  ----------
+  N : integer
+  Number of nodes.
+  p : float
+  propability for randomization (see paper above)
+  k : integer
+  Number of neighbours to which each node is initially connected on each
+  side. The default is 2.
+
+  Returns
+  -------
+  A : np.array (matrix)
+  Adjacency matrix for such a network.
+
+  """
+  B = small_world_network(N, k)
+  for j in range(k):
+      for i in range(N):
+          rand_agent = random.randint(0, N-1)
+          while ((rand_agent == i) or (B[rand_agent][i] == 1)):
+              rand_agent = random.randint(0, N-1)
+          if decision(p):
+              B = delete_connection(B, i-(j+1), i)
+              B = make_connection(B, rand_agent, i)
+  return B
