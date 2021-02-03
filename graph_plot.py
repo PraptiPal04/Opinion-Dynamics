@@ -32,7 +32,10 @@ def graph_animate(A,x):
     edges=zip(rows.tolist(),cols.tolist())
     G=nx.Graph()
     G.add_edges_from(edges)
-    plot_positions=nx.drawing.circular_layout(G)
+   # plot_positions=nx.drawing.circular_layout(G)
+    plot_positions = nx.circular_layout(G)
+    new_dict = dict(zip(sorted(G.nodes()),plot_positions.values()))
+    plot_positions = new_dict
 
     vmin=-1
     vmax=1
@@ -40,6 +43,9 @@ def graph_animate(A,x):
     cmap=plt.get_cmap('coolwarm')
     sm=plt.cm.ScalarMappable(cmap=cmap,norm=norm)
     sm.set_array([])
+    labels={}
+    for i in range(np.shape(A)[0]):
+        labels[i] = f"{i}"
     
     def animate(i):
         '''
@@ -57,12 +63,13 @@ def graph_animate(A,x):
         '''
         nx.draw(G,pos=plot_positions,node_size=500,node_color=x[:,i],cmap='coolwarm',vmin=vmin,vmax=vmax)
         # string = s+str(v[i])
+        #nx.draw_networkx_labels(G, plot_positions, labels)
         plt.title(" Connections : 2 ; Probability : 0.25 ; with bias")
     fig=plt.gcf()
     plt.colorbar(sm)
     anim = an.FuncAnimation(fig, animate, frames=200, blit=False)
     writervideo = an.FFMpegWriter(fps=10) 
-    anim.save('Small_world_prob_bias_dyn_d_2.mp4', writer=writervideo)
+    anim.save('Small_world_prob_bias_dyn_d_10.mp4', writer=writervideo)
 
 def graph_plot(A,x):
     
